@@ -1,0 +1,69 @@
+(* problem 1, this uses the found boolean value to determine whether it has matched, if not returns NONE else it returns SOME without the target, the found variables state is essentially stored in the stack, once the base case is reached this is how it know to append or not. Also the initial call "remove(false, lst)" means that within the functions logic is found = false, which becomes its state before each recursive call *)
+
+fun all_except_option(target, lst) =
+    let
+        fun remove(found, []) = if found then SOME([]) else NONE
+          | remove(found, x::xs) =
+            if x = target then
+                remove(true, xs)
+            else
+                case remove(found, xs) of
+                     NONE => NONE
+                   | SOME(rest) => SOME(x::rest)
+    in
+        remove(false, lst)
+    end;
+
+(* problem 2 this function loops through, using the List.exist standard lib function that return true if an item in x is equal to s then a recursive call that call all_except options > which removes non matches and then appends and calls the base function till it hits the base case to where it will return acc  *)
+fun get_substitutions1(substitutions, s) =
+    let
+        fun append_option(NONE, acc) = acc
+          | append_option(SOME(lst), acc) = lst @ acc
+
+        fun process_substitutions([], acc) = acc
+          | process_substitutions(x::xs, acc) =
+            if List.exists (fn item => item = s) x then
+                process_substitutions(xs, append_option(all_except_option(s, x), acc))
+            else
+                process_substitutions(xs, acc)
+    in
+        process_substitutions(substitutions, [])
+    end;
+
+(* problem 3, the newAcc acts as a tail recursive element, if there is no match within x (NONE) then acc is returned back in recursive call, else lst is appended and stored in newACC, the list needs to be reversed once base case is hit to go back to the original order *)					      
+fun get_substitutions2(substitutions, s) =
+    let
+        fun process_substitutions_tail([], acc) = List.rev(acc)
+          | process_substitutions_tail(x::xs, acc) =
+            let
+                val newAcc = case all_except_option(s, x) of
+                                 NONE => acc 
+                               | SOME(lst) => lst @ acc  
+            in
+                process_substitutions_tail(xs, newAcc)  
+            end
+    in
+        process_substitutions_tail(substitutions, [])  
+    end; 
+
+(* problem 4 the subFirst Names uses a previous function to get the non unique names with list list of names, a helper function defined in the second let uses the subFirst Names (if returns) [] or x::xs then recursives calls items in output of subfirsNames whilst appending the full names to another list,*)
+
+fun similar_names (substitutions, {first = firstname, middle = middlename, last = lastname}) =
+    let
+	val subFirst = get_substitutions2 (substitutions, firstname)
+    in
+	let
+	    fun substituteNames (subFirstNameList, allNamesList) =
+		case subFirstNameList of
+		    [] => allNamesList
+		  | x :: x' => substituteNames (x', {first = x, middle = middlename, last = lastname} :: allNamesList)
+	in
+	    substituteNames (subFirst, [{first = firstname, middle = middlename, last = lastname}])
+	end
+    end
+
+				 
+
+	      
+				 
+			     
