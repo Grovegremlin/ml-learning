@@ -1,0 +1,12 @@
+
+(* problem 1, String.sub evaluates the first val "0" in the string, then the predicate function check is upper and is filtered, called on listy *) 
+fun only_capitals listy = List.filter (fn s => Char.isUpper (String.sub(s, 0))) listy
+
+(* problem 2, folds from left to right, using the predicate function looking for larger string size (will work without this String.size, basecase/accumulator is "" and called to listy *) 				      
+fun longest_string1 (listy) =
+    foldl (fn (x,y) => if String.size x > String.size y then x else y) "" listy
+
+(* problem 3, will return the string closest to the end because it does no disclude strings the same size as x *)
+	  
+fun longest_string2 (listy) =
+    foldl (fn (x,y) => if String.size x => String.size y then x else y) "" listy
