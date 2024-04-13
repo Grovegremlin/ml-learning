@@ -84,6 +84,7 @@ fun partition (lst) =
         helpy(lst, [], [], 0)
     end;
 
+(*
 fun quick_sort [] = []
   | quick_sort (x::xs) =
     let
@@ -91,13 +92,44 @@ fun quick_sort [] = []
     in
         quick_sort left @ [x] @ quick_sort right
     end;
+*)
 
-					       
-					    
-	   
-	
+(* this merges 2 lists, i wasnt sure why i couldnt use wild card pattern matching for the top 2 base cases, but that was more of a curiosity thing, this probably could have been made alot more concise *) 
 
-	
+fun merge (list1, list2) =
+    let
+	fun helpy([], ys) = ys
+	  | helpy(xs, []) = xs
+	  | helpy(x::xs, y::ys) = if y < x then
+				      y :: helpy(x::xs, ys)
+				  else x :: helpy(xs, y::ys)
+    in
+	helpy(list1, list2)
+    end;
+
+(* "deep_reversion" can reverse a' list list > a' list list and reverse order of all layers of the list of list *) 
+
+fun deep_reversion (listyy) =
+    let
+	fun helpy([], acc) = acc
+	  | helpy(x::xs, acc)  = let val reversedList = List.rev x
+				 in helpy(xs, reversedList::acc)
+				 end;				      
+    in
+	helpy(listyy, [])
+    end;
 		     
-			     
+(* Tail-recursive Fibonacci generator using an accumulator *)
+
+fun fibbonaci n =
+    let
+	fun helpy(a, b, 0, acc) = List.rev (acc)
+	  | helpy(a, b, count, acc) = helpy(b, a+b, count-1, a::acc)
+    in
+	if n = 0 then []
+	else if n = 1 then [0]
+	else helpy(0, 1, n, [])
+    end;
+	
+  
     
