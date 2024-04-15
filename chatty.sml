@@ -130,6 +130,27 @@ fun fibbonaci n =
 	else if n = 1 then [0]
 	else helpy(0, 1, n, [])
     end;
+
+(* ChatGpt problem >> Objective: Write a function remove_duplicates that removes consecutive duplicate elements from a list *) 
+
+fun remove_duplicates (listy) =
+    let
+	fun helpy_1([], acc, new) = List.rev (acc::new)
+	  | helpy_1(x::xs, acc, new) = if x = acc then helpy_1(xs, acc, new)
+				       else
+					   if acc = "" then helpy_1(xs, x, new)
+					   else
+					       helpy_1(xs, x, acc::new)
+    in
+	helpy_1(listy, "", [])
+    end;
+
+(* own fold function and a function that adds int values in list, *)
+
+fun fold (f,acc,xs) =
+    case xs of
+	[] => acc
+      | x::xs => fold (f, f(acc,x), xs)
+		 
+val g = fn (x, acc) => x + acc
 	
-  
-    
